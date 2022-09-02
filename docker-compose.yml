@@ -1,12 +1,20 @@
 version: "3"
 
 services:
+  mysql: 
+    image: mysql:latest
+    volumes:
+      - mysql-data:/var/lib/mysql
+    env_file:
+      - ./settings/.env.mysql.db
+    ports:
+      - 3306:3306
   mongodb:
     image: mongo
     volumes:
       - mongodb-data:/data/db
     env_file:
-      - ./settings/.env.db
+      - ./settings/.env.mongo.db
     ports:
       - 27017:27017
 
@@ -27,7 +35,8 @@ services:
     ports:
       - 8080:8080
     command: >
-      ash -c "uvicorn main:app --host 0.0.0.0 --reload"
+      ash -c "python wait_for_mysql.py 
+      && uvicorn main:app --host 0.0.0.0 --reload"
     volumes:
       - ./backend/:/backend/
     expose:
@@ -37,3 +46,4 @@ services:
 
 volumes:
   mongodb-data: null
+  mysql-data: null
