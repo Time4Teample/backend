@@ -6,6 +6,10 @@ app = FastAPI()
 async def main():
     return {"Hello": "Scraper"}
 
+@app.get("/scrape")
+async def scrape():
+    return {"Start": "Scraper"}
+
 @app.get("/run")
 async def run():
     runner()
