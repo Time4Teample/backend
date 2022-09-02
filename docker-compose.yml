@@ -10,6 +10,7 @@ services:
     ports:
       - 3306:3306
   mongodb:
+    container_name: mongo
     image: mongo
     volumes:
       - mongodb-data:/data/db
@@ -19,6 +20,7 @@ services:
       - 27017:27017
 
   mongo-express:
+    container_name: mongo-express
     image: mongo-express
     env_file:
       - ./settings/.env.express
@@ -30,10 +32,11 @@ services:
       - mongodb
 
   backend:
+    container_name: fastapi 
     build: ./backend
     restart: always
     ports:
-      - 8080:8080
+      - 8080:8000
     command: >
       ash -c "python wait_for_mysql.py 
       && uvicorn main:app --host 0.0.0.0 --reload"
