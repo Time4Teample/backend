@@ -2,6 +2,7 @@ version: "3"
 
 services:
   mysql:
+    container_name: mysql
     image: mysql:latest
     volumes:
       - mysql-data:/var/lib/mysql
@@ -9,7 +10,7 @@ services:
       - ./settings/.env.mysql.db
     ports:
       - 3306:3306
-  mongodb:
+  mongo:
     container_name: mongo
     image: mongo
     volumes:
@@ -29,12 +30,14 @@ services:
     ports:
       - 8081:8081
     depends_on:
-      - mongodb
+      - mongo
 
   backend:
     container_name: fastapi
     build: ./backend
     restart: always
+    env_file:
+      - ./settings/.env.prod
     ports:
       - 8080:8000
     command: >
@@ -44,7 +47,8 @@ services:
     expose:
       - 8080
     depends_on:
-      - mongodb
+      - mongo
+      - mysql
 
   redis:
     image: redis:alpine
