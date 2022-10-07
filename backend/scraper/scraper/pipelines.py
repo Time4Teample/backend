@@ -8,24 +8,40 @@
 from itemadapter import ItemAdapter
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
-from scrpy.utils.project import get_project_settings
+from scrapy.utils.project import get_project_settings
 
 import logging
 
 settings = get_project_settings()
 
 class ScraperPipeline:
+    collection_name = 'courses'
+
+    def __init__(self, mongo_uri, mongo_db):
+        self.mongo_uri = mongo_uri
+        self.mongo_db = mongo_db
+
+    @classmethod
+    def from_crawler(cls, crawler):
+        return cls(
+            # mongo_uri=settings["MONGODB_SETTINGS"],
+            mongo_uri="mongodb://root:root@localhost:27017/",
+            mongo_db=crawler.settings.get('MONGO_DATABASE', 'items')
+        )
+
     def process_item(self, item, spider):
+        self.db[self.collection_name].insert_one(ItemAdapter(item).asdict())
         return item
 
     def open_spider(self, spider):
-        conn = MongoClient(settings["MONGODB_SETTINGS"])
+        # conn = MongoClient()
+        self.conn = MongoClient(self.mongo_uri)
+        self.db = self.conn[self.mongo_db]
         try:
-            conn.admin.command('ping')
+            self.conn.admin.command('ping')
         except ConnectionFailure:
             logging.log("Connection failure from MongoClient.")
 
     def close_spider(self, spider):
-        ...
-
+        self.conn.close()        
 

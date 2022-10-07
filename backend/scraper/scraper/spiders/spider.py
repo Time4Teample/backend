@@ -1,57 +1,30 @@
-import re
-
 import scrapy
-from scrapy.utils.url import canonicalize_url, add_http_if_no_scheme
-from scrapy.linkextractors import LinkExtractor
 
 
 class BaseSpider(scrapy.Spider):
-    name = 'base'
+    name = "base"
+    allowed_domains = ['sugang.seongnam.go.kr']
 
-    def __init__(self, url, search_terms=None, *args, **kwargs):
-        if url.startswith('.'):
-            with open(url) as f:
-                urls = [line.strip() for line in f]
-        else:
-            urls = [url]
-        self.start_urls = [add_http_if_no_scheme(_url) for _url in urls]
-        self.search_terms = search_terms
-        self._extra_search_terms = None
-        self._reset_link_extractors()
-        self.images_link_extractor = LinkExtractor(
-            tags=['img'], attrs=['src'], deny_extensions=[])
-        self.state = {}
+    def __init__(self, *args, **kwargs):
+        # self.start_url = "https://learning.seongnam.go.kr/index.do?"
+        self.start_url = "https://sugang.seongnam.go.kr/ilms/learning/learningList.do?"
         super().__init__(*args, **kwargs)
 
-    def parse(self, response):
-        self.logger.info(f"Response received: {response.url}")
+    def start_requests(self):
+        url = self.start_url
+        yield scrapy.Request(url, self.parse)
 
-    def _looks_like_url(txt):
-        """
-            Return True if text looks like an URL (probably relative).
-            >>> _looks_like_url("foo.bar")
-            False
-            >>> _looks_like_url("http://example.com")
-            True
-            >>> _looks_like_url("/page2")
-            True
-            >>> _looks_like_url("index.html")
-            True
-            >>> _looks_like_url("foo?page=1")
-            True
-            >>> _looks_like_url("x='what?'")
-            False
-            >>> _looks_like_url("visit this page?")
-            False
-            >>> _looks_like_url("?")
-            False
-        """
-        if " " in txt or "\n" in txt:
-            return False
-        if "/" in txt:
-            return True
-        if re.search(r'\?\w+=.+', txt):
-            return True
-        if re.match(r"\w+\.html", txt):
-            return True
-        return False
+    def parse(self, response):
+        self.logger.info(f"Response received: {response.text}")
+        content = response.css("tr").getall()
+        self.logger.info(f"{content}")
+
+    def create_query_strings(
+        self,
+        search_condition: int,
+        office_area_gu: str,
+        office_area_dong: str,
+        page_index: int = 0,
+        search_uses_yn: str = 'Y'
+    ):
+        return f"?searchUsesYn={search_uses_yn}&searchCondition={search_condition}&pageIndex={page_index}&office_area_gu={office_area_gu}&office_area_dong={office_area_dong}"
