@@ -15,8 +15,6 @@ import logging
 settings = get_project_settings()
 
 class ScraperPipeline:
-    collection_name = 'courses'
-
     def __init__(self, mongo_uri, mongo_db):
         self.mongo_uri = mongo_uri
         self.mongo_db = mongo_db
@@ -24,8 +22,7 @@ class ScraperPipeline:
     @classmethod
     def from_crawler(cls, crawler):
         return cls(
-            # mongo_uri=settings["MONGODB_SETTINGS"],
-            mongo_uri="mongodb://root:root@localhost:27017/",
+            mongo_uri=settings["MONGODB_SETTINGS"],
             mongo_db=crawler.settings.get('MONGO_DATABASE', 'items')
         )
 
