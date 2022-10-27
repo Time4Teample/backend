@@ -8,23 +8,40 @@ from scrapy.linkextractors import LinkExtractor
 class BaseSpider(scrapy.Spider):
     name = 'base'
 
-    def __init__(self, url, search_terms=None, *args, **kwargs):
-        if url.startswith('.'):
-            with open(url) as f:
-                urls = [line.strip() for line in f]
-        else:
-            urls = [url]
-        self.start_urls = [add_http_if_no_scheme(_url) for _url in urls]
-        self.search_terms = search_terms
-        self._extra_search_terms = None
-        self._reset_link_extractors()
-        self.images_link_extractor = LinkExtractor(
-            tags=['img'], attrs=['src'], deny_extensions=[])
-        self.state = {}
+    def __init__(self, url=None, search_terms=None, *args, **kwargs):
+        # if url.startswith('.'):
+        #     with open(url) as f:
+        #         urls = [line.strip() for line in f]
+        # else:
+        #     urls = [url]
+        # self.start_urls = [add_http_if_no_scheme(_url) for _url in urls]
+        # self.search_terms = search_terms
+        # self._extra_search_terms = None
+        # self._reset_link_extractors()
+        # self.images_link_extractor = LinkExtractor(
+        #     tags=['img'], attrs=['src'], deny_extensions=[])
+        # self.state = {}
         super().__init__(*args, **kwargs)
+
+    def start_requests(self):
+        page_index = 1
+        list_url = f'https://sugang.seongnam.go.kr/ilms/learning/learningList.do'
+
+
+        yield scrapy.Request(list_url, self.parse)
 
     def parse(self, response):
         self.logger.info(f"Response received: {response.url}")
+        with open("result.html", 'w') as f:
+            f.write(response.text)
+            f.close()
+
+
+        for detail in response.xpath('//a[contains(@href, "javascript:;")]').getall():
+            yield {
+                'link': detail
+            }
+
 
     def _looks_like_url(txt):
         """
