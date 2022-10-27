@@ -17,7 +17,7 @@ class BaseSpider(scrapy.Spider):
 
     def parse(self, response):
         self.logger.info(f"Response received: {response.url}")
-        for detail in response.xpath('//a[contains(@href, "javascript:;")]').getall():
+        for detail in response.xpath('//a[contains(@href, "javascript:;") and contains(@onclick, "false")]').getall():
             yield {
                 'link': detail
             }
