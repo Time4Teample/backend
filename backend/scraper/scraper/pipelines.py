@@ -15,12 +15,28 @@ import logging
 settings = get_project_settings()
 
 class ScraperPipeline:
+    collection_name = 'courses'
+
+    def __init__(self, mongo_uri, mongo_db):
+        self.mongo_uri = mongo_uri
+        self.mongo_db = mongo_db
+
+    @classmethod
+    def from_crawler(cls, crawler):
+        return cls(
+            # mongo_uri=settings["MONGODB_SETTINGS"],
+            mongo_uri="mongodb://root:root@localhost:27017/",
+            mongo_db=crawler.settings.get('MONGO_DATABASE', 'items')
+        )
+
     def process_item(self, item, spider):
         self.collection.insert_one(item)
         return item
 
     def open_spider(self, spider):
-        conn = MongoClient(settings["MONGODB_SETTINGS"])
+        # conn = MongoClient()
+        self.conn = MongoClient(self.mongo_uri)
+        self.db = self.conn[self.mongo_db]
         try:
             conn.admin.command('ping')
             self.database = conn["city"]
@@ -31,6 +47,5 @@ class ScraperPipeline:
 
 
     def close_spider(self, spider):
-        ...
-
+        self.conn.close()
 

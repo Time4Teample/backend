@@ -8,6 +8,7 @@
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 import os
 
+
 BOT_NAME = 'scraper'
 
 SPIDER_MODULES = ['scraper.spiders']
@@ -48,7 +49,7 @@ DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDupeFilter"
 #USER_AGENT = 'scraper (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = True
+ROBOTSTXT_OBEY = False
 
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
@@ -94,7 +95,7 @@ DOWNLOAD_DELAY = 1
 #   'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 #   'Accept-Language': 'en',
 #}
-
+FEED_EXPORT_ENCODING = 'utf-8'
 # Enable or disable spider middlewares
 # See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 #SPIDER_MIDDLEWARES = {
@@ -121,5 +122,6 @@ ITEM_PIPELINES = {
 }
 
 MONGODB_SETTINGS = {
-    "MONGODB": os.getenv("ME_CONFIG_MONGODB_URL"),
+    # "MONGODB": os.getenv("ME_CONFIG_MONGODB_URL"),
+    "MONGODB": "mongodb://root:root@localhost:27017/",
 }
