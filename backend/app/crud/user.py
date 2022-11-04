@@ -2,7 +2,7 @@ from typing import Any, Dict, Optional, Union
 
 from sqlalchemy.orm import Session
 
-from app.core.security import get_password_hash, verify_password
+from app.cores.security import get_password_hash, verify_password
 from app.crud.base import Base
 from app.models.user import User
 from app.schemas.user import UserCreate, UserUpdate
@@ -59,4 +59,4 @@ class User(Base[User, UserCreate, UserUpdate]):
         return user.is_superuser
 
 
-crud_user = CRUDUser(User)
+crud_user = User(User)

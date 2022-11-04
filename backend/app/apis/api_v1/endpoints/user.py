@@ -2,12 +2,11 @@ from typing import Any
 
 from fastapi import APIRouter, Depends, Body, HTTPException
 from fastapi.encoders import jsonable_encoder
-from pydantic.networks import EmailStr
 
-from app.api.depends import get_current_active_user, get_current_active_superuser
+from app.apis.depends import get_current_active_user, get_current_active_superuser
 from app.models.user import User
 from app.schemas.user import UserRead, UserUpdate
-from app.api.depends import get_db
+from app.apis.depends import get_db
 from sqlalchemy.orm import Session
 from app.crud.user import crud_user
 
@@ -20,7 +19,7 @@ def read_user_me(current_user: User = Depends(get_current_active_user)) -> UserR
 
 
 @router.patch('/me', response_model=UserRead, response_model_exclude={"password"})
-def update_user_me(*, db: Session = Depends(get_db), password: str = Body(None), email: EmailStr = Body(None), current_user: User = Depends(get_current_active_user)):
+def update_user_me(*, db: Session = Depends(get_db), password: str = Body(None), email: str = Body(None), current_user: User = Depends(get_current_active_user)):
     current_user_data = jsonable_encoder(current_user)
     user_in = UserUpdate(**current_user_data)
     if password:

@@ -1,5 +1,5 @@
 from typing import Optional
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
 
 class UserBase(BaseModel):
     class Config:
@@ -11,7 +11,7 @@ class User(UserBase):
     gender: Optional[str]
     address: str
     telephone: str
-    email: EmailStr
+    email: str
     is_active: bool
     is_superuser: bool
 
@@ -22,3 +22,10 @@ class UserCreate(UserBase):
 
 class UserDelete(UserBase):
     is_active: bool
+
+
+class UserUpdate(UserBase):
+    ...
+
+class UserRead(User):
+    ...

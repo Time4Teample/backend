@@ -35,13 +35,13 @@ services:
   backend:
     container_name: fastapi
     build: ./backend
-    restart: always
+    restart: on-failure
     env_file:
       - ./settings/.env.prod
     ports:
       - 8080:8000
     command: >
-      ash -c "python wait_for_mysql.py  && uvicorn main:app --host 0.0.0.0 --reload"
+      ash -c "python3 wait_for_mysql.py  && uvicorn main:app --host 0.0.0.0 --reload"
     volumes:
       - ./backend/:/backend/
     expose:

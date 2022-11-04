@@ -7,7 +7,7 @@ class User(Base):
 
     id = Column(INTEGER(display_width=11, unsigned=True), primary_key=True, index=True)
     name = Column(String(100), index=True, nullable=False)
-    gender = Column(ENUM["MALE", "FEMALE", "OTHER"], nullable=False)
+    gender = Column(ENUM("MALE", "FEMALE", "OTHER"), nullable=False)
     age = Column(Integer)
     email = Column(String(255), unique=True, index=True, nullable=False)
     address = Column(String(255), unique=True, index=True, nullable=False)

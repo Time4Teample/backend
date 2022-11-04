@@ -3,8 +3,8 @@ from datetime import timedelta
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
-from app.core.config import settings
-from app.core.security import create_access_token
+from app.cores.config import settings
+from app.cores.security import create_access_token
 from app.db.session import Base, engine, get_db
 from app.schemas.user import UserCreate
 from app.crud.user import crud_user

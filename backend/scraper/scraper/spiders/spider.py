@@ -10,7 +10,7 @@ class BaseSpider(scrapy.Spider):
 
     def start_requests(self):
         page_index = 1
-        list_url = f'https://sugang.seongnam.go.kr/ilms/learning/learningList.do'
+        list_url = f'https://sugang.seongnam.go.kr/ilms/learning/learningList.do?searchUseYn=Y&searchCondition=1&searchKeyword=&pageIndex={page_index}'
 
 
         yield scrapy.Request(list_url, self.parse)

@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from app.apis.api import router
+from app.apis import router
 from app.cores.config import settings
 from app.db.session import SessionLocal
 from app.db.database import init_db
@@ -11,7 +11,7 @@ def init() -> None:
     init_db(database)
 
 app = FastAPI()
-app.include_router(router, prefix=settings.API_V1_STR)
+app.include_router(router.router, prefix=settings.API_V1_STR)
 
 
 @app.get("/")
