@@ -14,12 +14,6 @@ BOT_NAME = 'scraper'
 SPIDER_MODULES = ['scraper.spiders']
 NEWSPIDER_MODULE = 'scraper.spiders'
 
-# Enables scheduling storing requests queue in redis.
-SCHEDULER = "scrapy_redis.scheduler.Scheduler"
-
-# Ensure all spiders share same duplicates filter through redis.
-DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDupeFilter"
-
 # Default requests serializer is pickle, but it can be changed to any module
 # with loads and dumps functions. Note that pickle is not compatible between
 # python versions.
@@ -118,10 +112,11 @@ FEED_EXPORT_ENCODING = 'utf-8'
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
     'scraper.pipelines.ScraperPipeline': 300,
-    'scrapy_redis.pipelines.RedisPipeline': 400
+    # 'scrapy_redis.pipelines.RedisPipeline': 400
 }
 
-MONGODB_SETTINGS = {
-    # "MONGODB": os.getenv("ME_CONFIG_MONGODB_URL"),
-    "MONGODB": "mongodb://root:root@localhost:27017/",
-}
+MONGODB_SETTINGS = "mongodb://root:root@mongo:27017/city.programs"
+#     {
+#     # "MONGODB": os.getenv("ME_CONFIG_MONGODB_URL"),
+#     "MONGODB":"mongodb://root:root@mongo:27017/",
+# }

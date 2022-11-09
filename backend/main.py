@@ -4,7 +4,6 @@ from app.apis import router
 from app.cores.config import settings
 from app.db.session import SessionLocal
 from app.db.database import init_db
-from scraper.runner import runner
 
 def init() -> None:
     database = SessionLocal()
@@ -24,7 +23,6 @@ async def scrape():
 
 @app.get("/run")
 async def run():
-    runner()
     return {"Status": "Running"}
 
 init()

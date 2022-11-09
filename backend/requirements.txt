@@ -11,3 +11,4 @@ PyJWT
 passlib
 python-jose
 python-dotenv
+motor

@@ -50,6 +50,15 @@ services:
       - mongo
       - mysql
 
+  spider:
+    container_name: spider  
+    build: ./backend
+    command: ash -c "cd scraper && scrapy crawl base"
+    volumes:
+        - mongodb-data:/data/db
+    depends_on:
+        - mongo
+
   redis:
     image: redis:alpine
     command: redis-server --port 6379
@@ -60,6 +69,7 @@ services:
       - "mode=standalone"
     ports:
       - 6379:6379
+
 
 volumes:
   mongodb-data: null
